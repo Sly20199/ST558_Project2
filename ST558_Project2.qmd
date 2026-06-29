@@ -99,6 +99,7 @@ table(NBA_data$ShotType)
 table(NBA_data$ShotOutcome)
 table(NBA_data$FoulType)
 table(NBA_data$ReboundType)
+
 table(NBA_data$Quarter)
 table(NBA_data$HomeAway)
 table(NBA_data$TurnoverType)
