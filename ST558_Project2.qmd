@@ -1,0 +1,121 @@
+---
+title: "ST558 project 2"
+author: "Stephanie Shuai"
+format: html
+editor: visual
+---
+
+```{r}
+
+library(tidyverse)
+library(dplyr)
+library(readr)
+```
+
+# Read the data
+
+```{r}
+NBA_data <- read.csv("~/Desktop/ST558_Project2-main/NBA_PBP_2019-20.csv")
+```
+
+```{r}
+head(NBA_data)
+```
+
+
+```{r}
+str(NBA_data)
+```
+
+```{r}
+lapply(NBA_data[c("GameType", "WinningTeam", "Quarter", "AwayTeam", "HomeTeam",
+  "ShotType", "ShotOutcome", "FoulType", "ReboundType",
+  "ViolationType", "FreeThrowOutcome", "FreeThrowNum",
+  "TurnoverType", "TurnoverCause")], unique)
+```
+
+
+```{r}
+NBA_data <- NBA_data %>%
+  mutate(
+    across(where(is.character), ~ na_if(., "")),
+    GameType = factor(GameType, levels = c("playoff", "regular")),
+    WinningTeam = factor(WinningTeam, levels = c(
+      "TOR", "LAC", "CHO", "DET", "ORL", "MIN", "MIA", "PHI", "DAL", "SAS",
+      "UTA", "PHO", "DEN", "ATL","MIL", "BOS", "BRK", "CHI", "WAS", "POR",
+      "LAL", "CLE", "HOU", "OKC", "MEM", "NYK", "GSW", "IND", "NOP","SAC"
+      )),
+   Quarter = factor(Quarter, levels = c(1, 2, 3, 4, 5, 6)),
+   AwayTeam = factor(AwayTeam, levels = c(
+     "NOP", "LAL", "CHI", "DET", "CLE", "MIN","MEM", "BOS", "WAS", "NYK", "OKC", "SAC",
+     "DEN", "ATL", "MIL", "LAC", "TOR", "DAL","PHO", "POR", "UTA", "MIA", "PHI", "ORL",
+     "IND", "GSW", "BRK", "CHO", "HOU", "SAS"
+     )),
+   HomeTeam = factor(HomeTeam, levels = c(
+     "TOR", "LAC", "CHO", "IND", "ORL", "BRK", "MIA", "PHI", "DAL", "SAS", "UTA",
+     "PHO", "POR", "DET", "HOU", "GSW", "BOS", "MEM", "NOP", "OKC", "DEN", "SAC",
+     "LAL", "MIL", "ATL", "NYK", "CHI", "CLE", "MIN", "WAS" )),
+   ShotType = factor(ShotType, 
+     levels = c("2-pt jump shot", "2-pt layup", "3-pt jump shot", 
+                "2-pt hook shot", "2-pt dunk"
+     )),
+   ShotOutcome = factor(ShotOutcome, levels = c("miss","make")),
+   FoulType = factor(FoulType,levels = c(
+     "shooting", "offensive", "personal", "loose ball","technical", 
+     "away from play","personal take", "flagrant", "clear path"
+     )),
+   FreeThrowOutcome = factor(FreeThrowOutcome, levels = c("make", "miss")),
+   FreeThrowNum = factor(FreeThrowNum, levels = c(
+    "1 of 2", "2 of 2", "1 of 1", "1 of 3", "2 of 3", "3 of 3", "technical"
+     )),
+   ViolationType = factor(ViolationType, levels = c(
+     "kicked ball", "def goaltending", "delay of game", "jump ball", "double lane",
+      "violation"
+     )),
+  TimeoutTeam = factor(TimeoutTeam, levels = c(
+    "TOR", "NOP", "LAC", "LAL", "CHO", "CHI", "IND", "DET", "ORL", "CLE",
+    "BRK", "MIN", "MEM", "MIA", "PHI", "BOS", "DAL", "WAS", "NYK", "SAS", "UTA",
+    "OKC", "PHO", "SAC", "POR", "DEN", "ATL", "MIL", "HOU", "GSW"
+    )),
+  TurnoverType = factor(TurnoverType, levels = c(
+      "offensive foul", "bad pass", "traveling", "out of bounds lost ball", "8 sec",
+      "lost ball", "step out of bounds", "back court", "3 sec", "shot clock", "palming",
+      "off goaltending", "dbl dribble", "illegal assist", "turnover", "lane violation",
+      "discontinued dribble", "inbound", "5 sec"
+      )),
+  TurnoverCause = factor(TurnoverCause, levels = c("steal")),
+  ReboundType = factor( ReboundType, levels = c("offensive", "defensive")),
+  SecLeft = as.numeric(SecLeft),
+  AwayScore = as.numeric(AwayScore),
+  HomeScore = as.numeric(HomeScore),
+  ShotDist = as.numeric(ShotDist)
+ )
+```
+
+# One-way Contigency tables
+```{r}
+table(NBA_data$GameType)
+table(NBA_data$ShotType)
+table(NBA_data$ShotOutcome)
+table(NBA_data$FoulType)
+table(NBA_data$ReboundType)
+table(NBA_data$Quarter)
+table(NBA_data$HomeAway)
+table(NBA_data$TurnoverType)
+table(NBA_data$VilationType)
+```
+
+# Two-way Contigency tables
+
+```{r}
+table(NBA_data$GameType, NBA_data$ShotOutcome)
+table(NBA_data$ShotType, NBA_data$ShotOutcome)
+table(NBA_data$Quarter,NBA_data$ShotOutcome)
+table(NBA_data$GameType, NBA_data$FoulType)
+table(NBA_data$Quarter, NBA_data$TurnoverType)
+table(NBA_data$GameType, NBA_data$Quarter)
+table(NBA_data$Quarter, NBA_data$FoulType)
+
+```
+
+
