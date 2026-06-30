@@ -10,6 +10,7 @@ editor: visual
 library(tidyverse)
 library(dplyr)
 library(readr)
+library(ggplot2)
 ```
 
 # Read the data
@@ -89,7 +90,8 @@ NBA_data <- NBA_data %>%
   AwayScore = as.numeric(AwayScore),
   HomeScore = as.numeric(HomeScore),
   ShotDist = as.numeric(ShotDist)
- )
+  ) 
+
 ```
 
 # One-way Contigency tables
@@ -98,8 +100,6 @@ table(NBA_data$GameType)
 table(NBA_data$ShotType)
 table(NBA_data$ShotOutcome)
 table(NBA_data$FoulType)
-table(NBA_data$ReboundType)
-
 table(NBA_data$Quarter)
 table(NBA_data$HomeAway)
 table(NBA_data$TurnoverType)
@@ -119,4 +119,73 @@ table(NBA_data$Quarter, NBA_data$FoulType)
 
 ```
 
+# Numercial summaries
+
+```{r}
+NBA_data |>
+  filter(!is.na(ShotOutcome)) |>
+  group_by(ShotOutcome) |>
+  summarise(
+    n = n(),
+    mean = mean(ShotDist, na.rm = TRUE),
+    median = median(ShotDist, na.rm = TRUE),
+    sd = sd(ShotDist, na.rm = TRUE),
+    min = min(ShotDist, na.rm = TRUE),
+    max = max(ShotDist, na.rm = TRUE)
+  )
+```
+
+```{r}
+NBA_data |>
+  filter(!is.na(GameType)) |>
+  group_by(GameType) |>
+  summarise(
+    n = n(),
+    mean = mean(AwayScore, na.rm = TRUE),
+    median = median(AwayScore, na.rm = TRUE),
+    sd = sd(AwayScore, na.rm = TRUE),
+    min = min(AwayScore, na.rm = TRUE),
+    max = max(AwayScore, na.rm = TRUE)
+  )
+```
+
+```{r}
+aggregate(ShotDist ~ ShotOutcome, data = NBA_data, FUN = mean, na.rm = TRUE)
+```
+## Distinct Plots
+
+# Plot 1: Bar chart
+```{r}
+ggplot(NBA_data, aes(x = ShotOutcome)) + geom_bar() +
+  labs(
+    title = "Counts of Shot Outcomes",
+    x = "Shot Outcome",
+    y = "Count"
+  )
+```
+
+# Plot 2: Side-by-side bar chart
+```{r}
+ggplot(NBA_data, aes(x = ShotOutcome, fill = GameType)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Counts of Shot Outcomes by Game Type",
+    x = "Shot Outcome",
+    y = "Count",
+    fill = "Game Type"
+  )
+```
+
+# Plot 3: Histogram
+```{r}
+ggplot(
+  NBA_data |> filter(!is.na(ShotDist)), 
+  aes(x = ShotDist)) +
+  geom_histogram(bins = 20)+
+  labs(
+    title = "Distribution of Shot Distance",
+    x = "Shot Outcome",
+    y = "Count"
+  )
+```
 
