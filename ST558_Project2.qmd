@@ -5,41 +5,94 @@ format: html
 editor: visual
 ---
 
-```{r}
+===============================================================
 
+# NBA Shot Data Analysis Project
+
+===============================================================
+
+# Loading Packages
+
+We begin by loading the tidyverse package. The tidyverse is a collection of
+cohesive R packages. It automatically loads essential packages such as dplyr for data manipulation, readr for data import, and ggplot2 for data visualization. 
+
+```{r}
 library(tidyverse)
 library(dplyr)
 library(readr)
 library(ggplot2)
+library(ggstatsplot)
 ```
 
-# Read the data
+------------------------------------------------------------------------
+
+# Data Import and Data Structure Processing
+
+------------------------------------------------------------------------
+
+## Read NBA shooting data from a CSV file
+
+Next, we imported the NBA play-by-play dataset into R for using read_csv() from the readr package.
 
 ```{r}
-NBA_data <- read.csv("~/Desktop/ST558_Project2-main/NBA_PBP_2019-20.csv")
+NBA_data <- read_csv("~/Desktop/ST558_Project2-main/NBA_PBP_2019-20.csv", show_col_types = FALSE)
 ```
+
+## Previewing Data
+
+To verify that the dataset has been imported correctly and to perform a quick visual inspection of the column alignment, we print the first six rows of the dataset using the head() function. 
 
 ```{r}
 head(NBA_data)
 ```
 
+## Data Structure
+
+Then, we inspect the structural dimensions and variable data types of the dataset 
+using glimpse(). It transposes the data presentation, displaying each column vertically 
+along with its type and a preview of the initial values. This provides a highly readable 
+summary of the datasets's columns. 
 
 ```{r}
-str(NBA_data)
+glimpse(NBA_data)
 ```
 
+## Checking Unique Values 
+
+Before performing data cleaning and factor conversion, we explore the distinct 
+levels within the categorical variables. Using a pipeline, we select key variables
+of interest, and apply the unique() function to each column via map() form the purrr
+package. 
+
 ```{r}
-lapply(NBA_data[c("GameType", "WinningTeam", "Quarter", "AwayTeam", "HomeTeam",
+NBA_data %>%
+  select("GameType", "WinningTeam", "Quarter", "AwayTeam", "HomeTeam",
   "ShotType", "ShotOutcome", "FoulType", "ReboundType",
   "ViolationType", "FreeThrowOutcome", "FreeThrowNum",
-  "TurnoverType", "TurnoverCause")], unique)
+  "TurnoverType", "TurnoverCause"
+  ) %>%
+  map(unique)
 ```
 
+## Data Cleaning
+
+In this step, we clean and preprocess the raw dataset to ensure all variables are 
+in the correct format for statistical modeling. 
+
+First, we use 'na.if()' across all character columns to replace the empty string 
+entries with formal 'NA' missing values. 
+
+Next, we convert categorical variables into R 'factor' objects and explicitly specify their levels. 
+
+Finally, we convert game score, time remaining, and shot distance variables. 
 
 ```{r}
 NBA_data <- NBA_data %>%
   mutate(
+    # Convert empty strings to NA
     across(where(is.character), ~ na_if(., "")),
+    
+    # Factor levles
     GameType = factor(GameType, levels = c("playoff", "regular")),
     WinningTeam = factor(WinningTeam, levels = c(
       "TOR", "LAC", "CHO", "DET", "ORL", "MIN", "MIA", "PHI", "DAL", "SAS",
@@ -55,7 +108,8 @@ NBA_data <- NBA_data %>%
    HomeTeam = factor(HomeTeam, levels = c(
      "TOR", "LAC", "CHO", "IND", "ORL", "BRK", "MIA", "PHI", "DAL", "SAS", "UTA",
      "PHO", "POR", "DET", "HOU", "GSW", "BOS", "MEM", "NOP", "OKC", "DEN", "SAC",
-     "LAL", "MIL", "ATL", "NYK", "CHI", "CLE", "MIN", "WAS" )),
+     "LAL", "MIL", "ATL", "NYK", "CHI", "CLE", "MIN", "WAS" 
+     )),
    ShotType = factor(ShotType, 
      levels = c("2-pt jump shot", "2-pt layup", "3-pt jump shot", 
                 "2-pt hook shot", "2-pt dunk"
@@ -86,6 +140,8 @@ NBA_data <- NBA_data %>%
       )),
   TurnoverCause = factor(TurnoverCause, levels = c("steal")),
   ReboundType = factor( ReboundType, levels = c("offensive", "defensive")),
+  
+  # Convert numerical columns
   SecLeft = as.numeric(SecLeft),
   AwayScore = as.numeric(AwayScore),
   HomeScore = as.numeric(HomeScore),
@@ -94,37 +150,84 @@ NBA_data <- NBA_data %>%
 
 ```
 
-# One-way Contigency tables
+------------------------------------------------------------------------
+
+# Descriptive Statistical Analysis
+
+------------------------------------------------------------------------
+
+## One-way Contingency tables
+
+To explore the baseline frequency distribution of individual categorical variables in the dataset, we construct one-way contingency tables using the table function. These tables summarize the counts of observations within each category, helping us understand the distribution of game types, shot types, shot outcomes, fouls, quarters, turnovers, and violations. 
+
 ```{r}
+# Frequency table for game type
 table(NBA_data$GameType)
+
+# Frequency table for Shot type
 table(NBA_data$ShotType)
+
+# Frequency table for Shot Outcome
 table(NBA_data$ShotOutcome)
+
+# Frequency table for Foul type
 table(NBA_data$FoulType)
+
+# Frequency table for Quarter
 table(NBA_data$Quarter)
-table(NBA_data$HomeAway)
+
+# Frequency table for Turnover Type
 table(NBA_data$TurnoverType)
-table(NBA_data$VilationType)
+
+# Frequency table for Violation Type
+table(NBA_data$ViolationType)
 ```
 
-# Two-way Contigency tables
+## Two-way Contingency tables
+
+To analyze the relationships and potential associations between pairs of categorical variables, we construct two-way contingency tables. Cross-tabulating these variables allows us to observe patterns and trends, such as how shot tyeps relate to shout outcomes, or how foul types vary by game type. 
 
 ```{r}
+# Game type vs. Shot outcome
 table(NBA_data$GameType, NBA_data$ShotOutcome)
-table(NBA_data$ShotType, NBA_data$ShotOutcome)
-table(NBA_data$Quarter,NBA_data$ShotOutcome)
-table(NBA_data$GameType, NBA_data$FoulType)
-table(NBA_data$Quarter, NBA_data$TurnoverType)
-table(NBA_data$GameType, NBA_data$Quarter)
-table(NBA_data$Quarter, NBA_data$FoulType)
 
+# Shot type vs. Shot outcome
+table(NBA_data$ShotType, NBA_data$ShotOutcome)
+
+# Quarter vs. Shot outcome
+table(NBA_data$Quarter,NBA_data$ShotOutcome)
+
+# Game type vs. Foul type
+table(NBA_data$GameType, NBA_data$FoulType)
+
+# Quarter vs. Turnover type
+table(NBA_data$Quarter, NBA_data$TurnoverType)
+
+# Game type vs. Quarter
+table(NBA_data$GameType, NBA_data$Quarter)
+
+# Quarter vs. Foul type
+table(NBA_data$Quarter, NBA_data$FoulType)
 ```
 
-# Numercial summaries
+# Numerical summaries
+
+## Filter Missing Values and Summarize Shot Distance by Outcome
+
+Before computing summary statistics, we filter the dataset to create 'NBA_data_clean', removing any rows with missing values ('NA') in our primary analysis variables: 'ShotOutcome', 'ShotDist', and 'GameType'.
+
+We then calculate numerical summaries for the 'ShotDist'(Shot Distance) variable, grouped by the 'ShotOutcome'(make vs. miss). The summary metrics include the sample size, mean, median, standard deviation, minimum, and maximum. This helps us examine whether the average distance of a shot differs between successful and unsuccessful attempts. 
 
 ```{r}
-NBA_data |>
-  filter(!is.na(ShotOutcome)) |>
-  group_by(ShotOutcome) |>
+# Create clean data set
+NBA_data_clean <- NBA_data  %>%
+  filter(!is.na(ShotOutcome),
+         !is.na(ShotDist),
+         !is.na(GameType)) 
+
+# Numerical Summary
+NBA_data_clean %>%
+  group_by(ShotOutcome)  %>%
   summarise(
     n = n(),
     mean = mean(ShotDist, na.rm = TRUE),
@@ -135,10 +238,13 @@ NBA_data |>
   )
 ```
 
+## Summarize Away Team Score by Game Type
+
+To explore if the offensive output of visiting teams varies between different stages of the season, we group the cleaned data by GameType(playoff vs. regular). We then compute the descriptive statistics for the AwayScore variable. 
+
 ```{r}
-NBA_data |>
-  filter(!is.na(GameType)) |>
-  group_by(GameType) |>
+NBA_data_clean %>%
+  group_by(GameType) %>%
   summarise(
     n = n(),
     mean = mean(AwayScore, na.rm = TRUE),
@@ -150,42 +256,153 @@ NBA_data |>
 ```
 
 ```{r}
-aggregate(ShotDist ~ ShotOutcome, data = NBA_data, FUN = mean, na.rm = TRUE)
-```
-## Distinct Plots
-
-# Plot 1: Bar chart
-```{r}
-ggplot(NBA_data, aes(x = ShotOutcome)) + geom_bar() +
-  labs(
-    title = "Counts of Shot Outcomes",
-    x = "Shot Outcome",
-    y = "Count"
+NBA_data_clean %>%
+  group_by(Quarter) %>%
+  summarise(
+    n = n(),
+    mean = mean(SecLeft, na.rm = TRUE),
+    median = median(SecLeft, na.rm = TRUE),
+    sd = sd(SecLeft, na.rm = TRUE),
+    min = min(SecLeft, na.rm = TRUE),
+    max = max(SecLeft, na.rm = TRUE)
   )
 ```
 
-# Plot 2: Side-by-side bar chart
+------------------------------------------------------------------------
+
+# Data Visualization
+
+------------------------------------------------------------------------
+
+we present six distinct visualizations.
+
+## Plot 1: Univariate Bar chart(Shot Types)
+
+To examine the frequency and popularity of different shot selections, we construct a 
+univarite bar chart of the 'ShotType' variable. The height of each bar represents the 
+absolute count of shots attempted for each category. 
+
 ```{r}
-ggplot(NBA_data, aes(x = ShotOutcome, fill = GameType)) +
-  geom_bar(position = "dodge") +
+ggplot(NBA_data_clean, aes(x = ShotType)) + 
+  geom_bar() +
+  labs(
+    title = "Counts of Shot Types",
+    subtitle = "2019-20 NBA Play-by-Play Data",
+    x = "Shot Outcome",
+    y = "Count"
+  ) + 
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+## Plot 2: Density Plot (Shot Distance)
+
+To visualize the continuous probability distribution of shot distances, we construct
+a kernel density plot using geom_density(). We fill the area under the curve with 
+a custom color and apply a semitransparent opacity to achieve a modern look. The plot 
+shows where players are most active on the court. 
+
+```{r}
+ggplot(NBA_data_clean, aes(x = ShotDist)) +
+  geom_density(fill = "#1e3d59", alpha = 0.8 )
+  labs(
+    title = "Density of Shot Distance",
+    x = "Shot Outcome",
+    y = "Density"
+  ) + theme_minimal()
+```
+
+## Plot 3: Side-by-side Bar Chart (Multivariate - Shot Outcomes by Game Type)
+
+To investigate whether players' shot outcomes differ between high-pressure playoff games compared to regular season games, we create a side-by-side bar chart. We use fill = GameType to color the bars by game type and set position = "dodge" to place the playoff and regular season bars next to each other for easy comparison. 
+
+```{r}
+ggplot(NBA_data_clean, aes(x = ShotOutcome, fill = GameType)) +
+  geom_bar(position = "dodge", alpha = 0.9) +
+  scale_fill_manual(values = c("playoff" = "#ff6e40", "regular" = "#1e3d59"))
   labs(
     title = "Counts of Shot Outcomes by Game Type",
     x = "Shot Outcome",
     y = "Count",
     fill = "Game Type"
+  ) 
+```
+
+
+## Plot 4: Box Plot (Multivariate - Shot Distance by Shot Outcomes)
+
+To analyze the spread and key statistics of shot distances grouped by shot success,
+we construct side-by-side box plots. This visualization helps us assess the relationship
+between how far a shot is taken and whether it is successfully made. 
+
+```{r}
+ggplot(NBA_data_clean , aes(x = ShotOutcome, y = ShotDist, fill = ShotOutcome)) +
+  geom_boxplot()+
+  scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe"))
+  labs(
+    title = "Shot Distance by Shot Outcome",
+    x = "Shot Outcome",
+    y = "Shot Distance"
   )
 ```
 
-# Plot 3: Histogram
+## Plot 5: Faceted Historgram (Multivariate & Faceted - Shot Distance by Quarter)
+
+To analyze how shot distance and success rates evolve as the game progresses, we 
+construct a faceted histogram. 
+
 ```{r}
-ggplot(
-  NBA_data |> filter(!is.na(ShotDist)), 
-  aes(x = ShotDist)) +
-  geom_histogram(bins = 20)+
+ggplot(NBA_data_clean, aes(x = ShotDist, fill = ShotOutcome)) +
+  geom_histogram(bins = 20, position = "identity", alpha = 0.6) +
+  facet_wrap(~ Quarter, labeller = label_both) +
+  scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe"))
   labs(
-    title = "Distribution of Shot Distance",
+    title = "Density of Shot Distance by Quarter and Outcome",
     x = "Shot Outcome",
-    y = "Count"
+    y = "Density",
+    fill = "Shot Outcome"
   )
+```
+
+## Plot 6: Scatter Plot (Multivariate - Shot Distance vs. Seconds Left)
+
+To investigate the relationship between the time left on the clock in a quarter
+and the shot distance, we construct a scatter plot. 
+
+```{r}
+ggplot(NBA_data_clean, aes(x = SecLeft, y = ShotDist, color = ShotOutcome)) +
+  geom_point(alpha = 0.6) +
+  scale_color_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe"))
+  labs(
+    title = "Shot Distance vs. Seconds Left in Quarter",
+    x = "Seconds Remaining in Quarter",
+    y = "Shot Distance(feet)",
+    color = "Shot Outcome"
+  ) 
+```
+## Plot 7: Bivariate Highest Density Region (HDR) Plot 
+
+
+```{r}
+top3_shot_types <- NBA__data_clean %>% 
+  dplyr::count(ShotType, sort = TRUE) %>%
+  slice_head(n = 3) %>%
+  pull(ShotType)
+
+NBA_top3 <- NBA__data_clean %>% 
+  filter(ShotType %in% top3_shot_types)
+
+ggbetweenstats(
+  data  = NBA_top3,
+  x     = ShotType, 
+  y     = ShotDist,
+  title = "Shot Distance by Shot Type(Top3)",
+  xlab  = "Shot Type",
+  ylab  = "Shot Distance(feet)",
+  type  = "nonparametric",
+  pairwise.comparisons = TRUE, 
+  p.adjust.method = "BH"
+)
 ```
 
