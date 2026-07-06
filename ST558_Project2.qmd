@@ -34,7 +34,7 @@ library(ggstatsplot)
 Next, we imported the NBA play-by-play dataset into R for using read_csv() from the readr package.
 
 ```{r}
-NBA_data <- read_csv("NBA_PBP_2019-20.csv", show_col_types = FALSE)
+NBA_data <- read_csv("~/ST558_Project2/NBA_PBP_2019-20.csv")
 ```
 
 ## Previewing Data
