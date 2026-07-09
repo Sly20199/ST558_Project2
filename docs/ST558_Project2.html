@@ -384,50 +384,45 @@ $TurnoverCause
 <span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>     <span class="st">"PHO"</span>, <span class="st">"POR"</span>, <span class="st">"DET"</span>, <span class="st">"HOU"</span>, <span class="st">"GSW"</span>, <span class="st">"BOS"</span>, <span class="st">"MEM"</span>, <span class="st">"NOP"</span>, <span class="st">"OKC"</span>, <span class="st">"DEN"</span>, <span class="st">"SAC"</span>,</span>
 <span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>     <span class="st">"LAL"</span>, <span class="st">"MIL"</span>, <span class="st">"ATL"</span>, <span class="st">"NYK"</span>, <span class="st">"CHI"</span>, <span class="st">"CLE"</span>, <span class="st">"MIN"</span>, <span class="st">"WAS"</span> </span>
 <span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>     )),</span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>   <span class="at">ShotTypeGroup =</span> <span class="fu">ifelse</span>( </span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>     ShotType <span class="sc">==</span> <span class="st">"3-pt jump shot"</span>, <span class="st">"3-Pointers"</span>,</span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>     <span class="fu">ifelse</span>(</span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>       ShotType <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2-pt layup"</span>,<span class="st">"2-pt dunk"</span>), <span class="st">"Inside Shots"</span>,</span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ifelse</span>( </span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>         ShotType <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2-pt jump shot"</span>,<span class="st">"2-pt hook shot"</span>), <span class="st">"Mid-Range"</span>,<span class="cn">NA</span></span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>         )</span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>       )</span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>   ),</span>
-<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>   <span class="at">ShotTypeGroup =</span> <span class="fu">factor</span>(ShotTypeGroup, </span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"3-Pointers"</span>, <span class="st">"Inside Shots"</span>, <span class="st">"Mid-Range"</span>)),</span>
-<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>   <span class="at">ShotOutcome =</span> <span class="fu">factor</span>(ShotOutcome, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"miss"</span>,<span class="st">"make"</span>)),</span>
-<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>   <span class="at">FoulType =</span> <span class="fu">factor</span>(FoulType,<span class="at">levels =</span> <span class="fu">c</span>(</span>
-<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>     <span class="st">"shooting"</span>, <span class="st">"offensive"</span>, <span class="st">"personal"</span>, <span class="st">"loose ball"</span>,<span class="st">"technical"</span>, </span>
-<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>     <span class="st">"away from play"</span>,<span class="st">"personal take"</span>, <span class="st">"flagrant"</span>, <span class="st">"clear path"</span></span>
-<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>     )),</span>
-<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>   <span class="at">FreeThrowOutcome =</span> <span class="fu">factor</span>(FreeThrowOutcome, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"make"</span>, <span class="st">"miss"</span>)),</span>
-<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>   <span class="at">FreeThrowNum =</span> <span class="fu">factor</span>(FreeThrowNum, <span class="at">levels =</span> <span class="fu">c</span>(</span>
-<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1 of 2"</span>, <span class="st">"2 of 2"</span>, <span class="st">"1 of 1"</span>, <span class="st">"1 of 3"</span>, <span class="st">"2 of 3"</span>, <span class="st">"3 of 3"</span>, <span class="st">"technical"</span></span>
-<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>     )),</span>
-<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>   <span class="at">ViolationType =</span> <span class="fu">factor</span>(ViolationType, <span class="at">levels =</span> <span class="fu">c</span>(</span>
-<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>     <span class="st">"kicked ball"</span>, <span class="st">"def goaltending"</span>, <span class="st">"delay of game"</span>, <span class="st">"jump ball"</span>, <span class="st">"double lane"</span>,</span>
-<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>      <span class="st">"violation"</span></span>
-<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>     )),</span>
-<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">TimeoutTeam =</span> <span class="fu">factor</span>(TimeoutTeam, <span class="at">levels =</span> <span class="fu">c</span>(</span>
-<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"TOR"</span>, <span class="st">"NOP"</span>, <span class="st">"LAC"</span>, <span class="st">"LAL"</span>, <span class="st">"CHO"</span>, <span class="st">"CHI"</span>, <span class="st">"IND"</span>, <span class="st">"DET"</span>, <span class="st">"ORL"</span>, <span class="st">"CLE"</span>,</span>
-<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>    <span class="st">"BRK"</span>, <span class="st">"MIN"</span>, <span class="st">"MEM"</span>, <span class="st">"MIA"</span>, <span class="st">"PHI"</span>, <span class="st">"BOS"</span>, <span class="st">"DAL"</span>, <span class="st">"WAS"</span>, <span class="st">"NYK"</span>, <span class="st">"SAS"</span>, <span class="st">"UTA"</span>,</span>
-<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OKC"</span>, <span class="st">"PHO"</span>, <span class="st">"SAC"</span>, <span class="st">"POR"</span>, <span class="st">"DEN"</span>, <span class="st">"ATL"</span>, <span class="st">"MIL"</span>, <span class="st">"HOU"</span>, <span class="st">"GSW"</span></span>
-<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>    )),</span>
-<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">TurnoverType =</span> <span class="fu">factor</span>(TurnoverType, <span class="at">levels =</span> <span class="fu">c</span>(</span>
-<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>      <span class="st">"offensive foul"</span>, <span class="st">"bad pass"</span>, <span class="st">"traveling"</span>, <span class="st">"out of bounds lost ball"</span>, <span class="st">"8 sec"</span>,</span>
-<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>      <span class="st">"lost ball"</span>, <span class="st">"step out of bounds"</span>, <span class="st">"back court"</span>, <span class="st">"3 sec"</span>, <span class="st">"shot clock"</span>, <span class="st">"palming"</span>,</span>
-<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>      <span class="st">"off goaltending"</span>, <span class="st">"dbl dribble"</span>, <span class="st">"illegal assist"</span>, <span class="st">"turnover"</span>, <span class="st">"lane violation"</span>,</span>
-<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>      <span class="st">"discontinued dribble"</span>, <span class="st">"inbound"</span>, <span class="st">"5 sec"</span></span>
-<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>      )),</span>
-<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>  <span class="at">TurnoverCause =</span> <span class="fu">factor</span>(TurnoverCause, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"steal"</span>)),</span>
-<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">ReboundType =</span> <span class="fu">factor</span>( ReboundType, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"offensive"</span>, <span class="st">"defensive"</span>)),</span>
-<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert numerical columns</span></span>
-<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>  <span class="at">SecLeft =</span> <span class="fu">as.numeric</span>(SecLeft),</span>
-<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">AwayScore =</span> <span class="fu">as.numeric</span>(AwayScore),</span>
-<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">HomeScore =</span> <span class="fu">as.numeric</span>(HomeScore),</span>
-<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">ShotDist =</span> <span class="fu">as.numeric</span>(ShotDist)</span>
-<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>   <span class="at">ShotType =</span> <span class="fu">factor</span>(ShotType, </span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="fu">c</span>( <span class="st">"2-pt jump shot"</span>,</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"2-pt layup"</span>,</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"3-pt jump shot"</span>,</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"2-pt hook shot"</span>,</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"2-pt dunk"</span>)),</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>   <span class="at">ShotOutcome =</span> <span class="fu">factor</span>(ShotOutcome, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"miss"</span>,<span class="st">"make"</span>)),</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>   <span class="at">FoulType =</span> <span class="fu">factor</span>(FoulType,<span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>     <span class="st">"shooting"</span>, <span class="st">"offensive"</span>, <span class="st">"personal"</span>, <span class="st">"loose ball"</span>,<span class="st">"technical"</span>, </span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>     <span class="st">"away from play"</span>,<span class="st">"personal take"</span>, <span class="st">"flagrant"</span>, <span class="st">"clear path"</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>     )),</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>   <span class="at">FreeThrowOutcome =</span> <span class="fu">factor</span>(FreeThrowOutcome, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"make"</span>, <span class="st">"miss"</span>)),</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>   <span class="at">FreeThrowNum =</span> <span class="fu">factor</span>(FreeThrowNum, <span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1 of 2"</span>, <span class="st">"2 of 2"</span>, <span class="st">"1 of 1"</span>, <span class="st">"1 of 3"</span>, <span class="st">"2 of 3"</span>, <span class="st">"3 of 3"</span>, <span class="st">"technical"</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>     )),</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>   <span class="at">ViolationType =</span> <span class="fu">factor</span>(ViolationType, <span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>     <span class="st">"kicked ball"</span>, <span class="st">"def goaltending"</span>, <span class="st">"delay of game"</span>, <span class="st">"jump ball"</span>, <span class="st">"double lane"</span>,</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>      <span class="st">"violation"</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>     )),</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">TimeoutTeam =</span> <span class="fu">factor</span>(TimeoutTeam, <span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"TOR"</span>, <span class="st">"NOP"</span>, <span class="st">"LAC"</span>, <span class="st">"LAL"</span>, <span class="st">"CHO"</span>, <span class="st">"CHI"</span>, <span class="st">"IND"</span>, <span class="st">"DET"</span>, <span class="st">"ORL"</span>, <span class="st">"CLE"</span>,</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"BRK"</span>, <span class="st">"MIN"</span>, <span class="st">"MEM"</span>, <span class="st">"MIA"</span>, <span class="st">"PHI"</span>, <span class="st">"BOS"</span>, <span class="st">"DAL"</span>, <span class="st">"WAS"</span>, <span class="st">"NYK"</span>, <span class="st">"SAS"</span>, <span class="st">"UTA"</span>,</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OKC"</span>, <span class="st">"PHO"</span>, <span class="st">"SAC"</span>, <span class="st">"POR"</span>, <span class="st">"DEN"</span>, <span class="st">"ATL"</span>, <span class="st">"MIL"</span>, <span class="st">"HOU"</span>, <span class="st">"GSW"</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>    )),</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">TurnoverType =</span> <span class="fu">factor</span>(TurnoverType, <span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>      <span class="st">"offensive foul"</span>, <span class="st">"bad pass"</span>, <span class="st">"traveling"</span>, <span class="st">"out of bounds lost ball"</span>, <span class="st">"8 sec"</span>,</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>      <span class="st">"lost ball"</span>, <span class="st">"step out of bounds"</span>, <span class="st">"back court"</span>, <span class="st">"3 sec"</span>, <span class="st">"shot clock"</span>, <span class="st">"palming"</span>,</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>      <span class="st">"off goaltending"</span>, <span class="st">"dbl dribble"</span>, <span class="st">"illegal assist"</span>, <span class="st">"turnover"</span>, <span class="st">"lane violation"</span>,</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>      <span class="st">"discontinued dribble"</span>, <span class="st">"inbound"</span>, <span class="st">"5 sec"</span></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>      )),</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">TurnoverCause =</span> <span class="fu">factor</span>(TurnoverCause, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"steal"</span>)),</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">ReboundType =</span> <span class="fu">factor</span>( ReboundType, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"offensive"</span>, <span class="st">"defensive"</span>)),</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert numerical columns</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">SecLeft =</span> <span class="fu">as.numeric</span>(SecLeft),</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>  <span class="at">AwayScore =</span> <span class="fu">as.numeric</span>(AwayScore),</span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">HomeScore =</span> <span class="fu">as.numeric</span>(HomeScore),</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">ShotDist =</span> <span class="fu">as.numeric</span>(ShotDist)</span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
@@ -450,8 +445,8 @@ playoff regular
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(NBA_data<span class="sc">$</span>ShotType)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-     2-pt dunk 2-pt hook shot 2-pt jump shot     2-pt layup 3-pt jump shot 
-         11740           5874          51077          55362          78344 </code></pre>
+2-pt jump shot     2-pt layup 3-pt jump shot 2-pt hook shot      2-pt dunk 
+         51077          55362          78344           5874          11740 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency table for Shot Outcome</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(NBA_data<span class="sc">$</span>ShotOutcome)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -523,11 +518,11 @@ out of bounds lost ball                   8 sec               lost ball
 <div class="cell-output cell-output-stdout">
 <pre><code>                
                   miss  make
-  2-pt dunk       1228 10512
-  2-pt hook shot  3087  2787
   2-pt jump shot 29558 21519
   2-pt layup     25162 30200
-  3-pt jump shot 50283 28061</code></pre>
+  3-pt jump shot 50283 28061
+  2-pt hook shot  3087  2787
+  2-pt dunk       1228 10512</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Quarter vs. Shot outcome</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(NBA_data<span class="sc">$</span>Quarter,NBA_data<span class="sc">$</span>ShotOutcome)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -733,7 +728,12 @@ out of bounds lost ball                   8 sec               lost ball
 <p>To visualize the continuous probability distribution of shot distances, we construct a kernel density plot using geom_density(). We fill the area under the curve with a custom color and apply a semitransparent opacity to achieve a modern look. The plot shows where players are most active on the court.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NBA_data_clean, <span class="fu">aes</span>(<span class="at">x =</span> ShotDist)) <span class="sc">+</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"#1e3d59"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"#1e3d59"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span> ) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Density of Shot Distance"</span>,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Shot Outcome"</span>,</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -741,23 +741,21 @@ out of bounds lost ball                   8 sec               lost ball
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Density of Shot Distance"</span>,</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Shot Outcome"</span>,</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Density"</span></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
-</div>
 </div>
 </section>
 <section id="plot-3-side-by-side-bar-chart-multivariate---shot-outcomes-by-game-type" class="level2">
 <h2 class="anchored" data-anchor-id="plot-3-side-by-side-bar-chart-multivariate---shot-outcomes-by-game-type">Plot 3: Side-by-side Bar Chart (Multivariate - Shot Outcomes by Game Type)</h2>
 <p>To investigate whether players’ shot outcomes differ between high-pressure playoff games compared to regular season games, we create a side-by-side bar chart. We use fill = GameType to color the bars by game type and set position = “dodge” to place the playoff and regular season bars next to each other for easy comparison.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NBA_data_clean, <span class="fu">aes</span>(<span class="at">x =</span> ShotOutcome, <span class="at">fill =</span> GameType)) <span class="sc">+</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"playoff"</span> <span class="ot">=</span> <span class="st">"#ff6e40"</span>, <span class="st">"regular"</span> <span class="ot">=</span> <span class="st">"#1e3d59"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NBA_data_clean, <span class="fu">aes</span>(<span class="at">x =</span> ShotOutcome, <span class="at">fill =</span> GameType)) <span class="sc">+</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"playoff"</span> <span class="ot">=</span> <span class="st">"#ff6e40"</span>, <span class="st">"regular"</span> <span class="ot">=</span> <span class="st">"#1e3d59"</span>)) <span class="sc">+</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Counts of Shot Outcomes by Game Type"</span>,</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Shot Outcome"</span>,</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count"</span>,</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Game Type"</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -765,28 +763,20 @@ out of bounds lost ball                   8 sec               lost ball
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Counts of Shot Outcomes by Game Type"</span>,</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Shot Outcome"</span>,</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count"</span>,</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Game Type"</span></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;ggplot2::labels&gt; List of 4
- $ x    : chr "Shot Outcome"
- $ y    : chr "Count"
- $ fill : chr "Game Type"
- $ title: chr "Counts of Shot Outcomes by Game Type"</code></pre>
-</div>
 </div>
 </section>
 <section id="plot-4-box-plot-multivariate---shot-distance-by-shot-outcomes" class="level2">
 <h2 class="anchored" data-anchor-id="plot-4-box-plot-multivariate---shot-distance-by-shot-outcomes">Plot 4: Box Plot (Multivariate - Shot Distance by Shot Outcomes)</h2>
 <p>To analyze the spread and key statistics of shot distances grouped by shot success, we construct side-by-side box plots. This visualization helps us assess the relationship between how far a shot is taken and whether it is successfully made.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NBA_data_clean , <span class="fu">aes</span>(<span class="at">x =</span> ShotOutcome, <span class="at">y =</span> ShotDist, <span class="at">fill =</span> ShotOutcome)) <span class="sc">+</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()<span class="sc">+</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"miss"</span> <span class="ot">=</span> <span class="st">"#e85a4f"</span>, <span class="st">"make"</span> <span class="ot">=</span> <span class="st">"#45b6fe"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NBA_data_clean , <span class="fu">aes</span>(<span class="at">x =</span> ShotOutcome, <span class="at">y =</span> ShotDist, <span class="at">fill =</span> ShotOutcome)) <span class="sc">+</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()<span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"miss"</span> <span class="ot">=</span> <span class="st">"#e85a4f"</span>, <span class="st">"make"</span> <span class="ot">=</span> <span class="st">"#45b6fe"</span>)) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Shot Distance by Shot Outcome"</span>,</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Shot Outcome"</span>,</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Shot Distance"</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -794,27 +784,22 @@ out of bounds lost ball                   8 sec               lost ball
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Shot Distance by Shot Outcome"</span>,</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Shot Outcome"</span>,</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Shot Distance"</span></span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;ggplot2::labels&gt; List of 3
- $ x    : chr "Shot Outcome"
- $ y    : chr "Shot Distance"
- $ title: chr "Shot Distance by Shot Outcome"</code></pre>
-</div>
 </div>
 </section>
 <section id="plot-5-faceted-histogram-multivariate-faceted---shot-distance-by-quarter" class="level2">
 <h2 class="anchored" data-anchor-id="plot-5-faceted-histogram-multivariate-faceted---shot-distance-by-quarter">Plot 5: Faceted Histogram (Multivariate &amp; Faceted - Shot Distance by Quarter)</h2>
 <p>To analyze how shot distance and success rates evolve as the game progresses, we construct a faceted histogram.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NBA_data_clean, <span class="fu">aes</span>(<span class="at">x =</span> ShotDist, <span class="at">fill =</span> ShotOutcome)) <span class="sc">+</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>, <span class="at">position =</span> <span class="st">"identity"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Quarter, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"miss"</span> <span class="ot">=</span> <span class="st">"#e85a4f"</span>, <span class="st">"make"</span> <span class="ot">=</span> <span class="st">"#45b6fe"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NBA_data_clean, <span class="fu">aes</span>(<span class="at">x =</span> ShotDist, <span class="at">fill =</span> ShotOutcome)) <span class="sc">+</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>, <span class="at">position =</span> <span class="st">"identity"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Quarter, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"miss"</span> <span class="ot">=</span> <span class="st">"#e85a4f"</span>, <span class="st">"make"</span> <span class="ot">=</span> <span class="st">"#45b6fe"</span>)) <span class="sc">+</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Density of Shot Distance by Quarter and Outcome"</span>,</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Shot Outcome"</span>,</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Density"</span>,</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Shot Outcome"</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -822,28 +807,21 @@ out of bounds lost ball                   8 sec               lost ball
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Density of Shot Distance by Quarter and Outcome"</span>,</span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Shot Outcome"</span>,</span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Density"</span>,</span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Shot Outcome"</span></span>
-<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;ggplot2::labels&gt; List of 4
- $ x    : chr "Shot Outcome"
- $ y    : chr "Density"
- $ fill : chr "Shot Outcome"
- $ title: chr "Density of Shot Distance by Quarter and Outcome"</code></pre>
-</div>
 </div>
 </section>
 <section id="plot-6-scatter-plot-multivariate---shot-distance-vs.-seconds-left" class="level2">
 <h2 class="anchored" data-anchor-id="plot-6-scatter-plot-multivariate---shot-distance-vs.-seconds-left">Plot 6: Scatter Plot (Multivariate - Shot Distance vs.&nbsp;Seconds Left)</h2>
 <p>To investigate the relationship between the time left on the clock in a quarter and the shot distance, we construct a scatter plot.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NBA_data_clean, <span class="fu">aes</span>(<span class="at">x =</span> SecLeft, <span class="at">y =</span> ShotDist, <span class="at">color =</span> ShotOutcome)) <span class="sc">+</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"miss"</span> <span class="ot">=</span> <span class="st">"#e85a4f"</span>, <span class="st">"make"</span> <span class="ot">=</span> <span class="st">"#45b6fe"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NBA_data_clean, <span class="fu">aes</span>(<span class="at">x =</span> SecLeft, <span class="at">y =</span> ShotDist, <span class="at">color =</span> ShotOutcome)) <span class="sc">+</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"miss"</span> <span class="ot">=</span> <span class="st">"#e85a4f"</span>, <span class="st">"make"</span> <span class="ot">=</span> <span class="st">"#45b6fe"</span>)) <span class="sc">+</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Shot Distance vs. Seconds Left in Quarter"</span>,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Seconds Remaining in Quarter"</span>,</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Shot Distance(feet)"</span>,</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Shot Outcome"</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -851,44 +829,31 @@ out of bounds lost ball                   8 sec               lost ball
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Shot Distance vs. Seconds Left in Quarter"</span>,</span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Seconds Remaining in Quarter"</span>,</span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Shot Distance(feet)"</span>,</span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Shot Outcome"</span></span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;ggplot2::labels&gt; List of 4
- $ x     : chr "Seconds Remaining in Quarter"
- $ y     : chr "Shot Distance(feet)"
- $ colour: chr "Shot Outcome"
- $ title : chr "Shot Distance vs. Seconds Left in Quarter"</code></pre>
-</div>
 </div>
 </section>
 <section id="plot-7-bivariate-highest-density-region-hdr-plot" class="level2">
 <h2 class="anchored" data-anchor-id="plot-7-bivariate-highest-density-region-hdr-plot">Plot 7: Bivariate Highest Density Region (HDR) Plot</h2>
 <p>To investigate whether shot distances differ significantly among the top three most frequent shot types, we construct a categorical statistical comparison plot using ggbetweenstats().</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>top3_shot_types <span class="ot">&lt;-</span> NBA_data_clean <span class="sc">%&gt;%</span> </span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(ShotType, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(ShotType)</span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>NBA_top3 <span class="ot">&lt;-</span> NBA_data_clean <span class="sc">%&gt;%</span> </span>
-<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ShotType <span class="sc">%in%</span> top3_shot_types)</span>
-<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
-<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data  =</span> NBA_top3,</span>
-<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x     =</span> ShotType, </span>
-<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">y     =</span> ShotDist,</span>
-<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Shot Distance by Shot Type(Top3)"</span>,</span>
-<span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab  =</span> <span class="st">"Shot Type"</span>,</span>
-<span id="cb64-15"><a href="#cb64-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab  =</span> <span class="st">"Shot Distance(feet)"</span>,</span>
-<span id="cb64-16"><a href="#cb64-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">type  =</span> <span class="st">"nonparametric"</span>,</span>
-<span id="cb64-17"><a href="#cb64-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">pairwise.comparisons =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb64-18"><a href="#cb64-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.adjust.method =</span> <span class="st">"BH"</span></span>
-<span id="cb64-19"><a href="#cb64-19" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>top3_shot_types <span class="ot">&lt;-</span> NBA_data_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(ShotType, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(ShotType)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>NBA_top3 <span class="ot">&lt;-</span> NBA_data_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ShotType <span class="sc">%in%</span> top3_shot_types)</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data  =</span> NBA_top3,</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x     =</span> ShotType, </span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">y     =</span> ShotDist,</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Shot Distance by Shot Type(Top3)"</span>,</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab  =</span> <span class="st">"Shot Type"</span>,</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab  =</span> <span class="st">"Shot Distance(feet)"</span>,</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">type  =</span> <span class="st">"nonparametric"</span>,</span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">pairwise.comparisons =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.adjust.method =</span> <span class="st">"BH"</span></span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

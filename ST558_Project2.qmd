@@ -101,17 +101,12 @@ NBA_data <- NBA_data %>%
      "PHO", "POR", "DET", "HOU", "GSW", "BOS", "MEM", "NOP", "OKC", "DEN", "SAC",
      "LAL", "MIL", "ATL", "NYK", "CHI", "CLE", "MIN", "WAS" 
      )),
-   ShotTypeGroup = ifelse( 
-     ShotType == "3-pt jump shot", "3-Pointers",
-     ifelse(
-       ShotType %in% c("2-pt layup","2-pt dunk"), "Inside Shots",
-       ifelse( 
-         ShotType %in% c("2-pt jump shot","2-pt hook shot"), "Mid-Range",NA
-         )
-       )
-   ),
-   ShotTypeGroup = factor(ShotTypeGroup, 
-                          levels = c("3-Pointers", "Inside Shots", "Mid-Range")),
+   ShotType = factor(ShotType, 
+                          levels = c( "2-pt jump shot",
+                                      "2-pt layup",
+                                      "3-pt jump shot",
+                                      "2-pt hook shot",
+                                      "2-pt dunk")),
    ShotOutcome = factor(ShotOutcome, levels = c("miss","make")),
    FoulType = factor(FoulType,levels = c(
      "shooting", "offensive", "personal", "loose ball","technical", 
@@ -206,6 +201,7 @@ table(NBA_data$GameType, NBA_data$Quarter)
 
 # Quarter vs. Foul type
 table(NBA_data$Quarter, NBA_data$FoulType)
+
 ```
 
 # Numerical summaries
@@ -297,7 +293,7 @@ To visualize the continuous probability distribution of shot distances, we const
 
 ```{r}
 ggplot(NBA_data_clean, aes(x = ShotDist)) +
-  geom_density(fill = "#1e3d59", alpha = 0.8 )
+  geom_density(fill = "#1e3d59", alpha = 0.8 ) +
   labs(
     title = "Density of Shot Distance",
     x = "Shot Outcome",
@@ -312,7 +308,7 @@ To investigate whether players' shot outcomes differ between high-pressure playo
 ```{r}
 ggplot(NBA_data_clean, aes(x = ShotOutcome, fill = GameType)) +
   geom_bar(position = "dodge", alpha = 0.9) +
-  scale_fill_manual(values = c("playoff" = "#ff6e40", "regular" = "#1e3d59"))
+  scale_fill_manual(values = c("playoff" = "#ff6e40", "regular" = "#1e3d59")) +
   labs(
     title = "Counts of Shot Outcomes by Game Type",
     x = "Shot Outcome",
@@ -328,7 +324,7 @@ To analyze the spread and key statistics of shot distances grouped by shot succe
 ```{r}
 ggplot(NBA_data_clean , aes(x = ShotOutcome, y = ShotDist, fill = ShotOutcome)) +
   geom_boxplot()+
-  scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe"))
+  scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe")) +
   labs(
     title = "Shot Distance by Shot Outcome",
     x = "Shot Outcome",
@@ -344,7 +340,7 @@ To analyze how shot distance and success rates evolve as the game progresses, we
 ggplot(NBA_data_clean, aes(x = ShotDist, fill = ShotOutcome)) +
   geom_histogram(bins = 20, position = "identity", alpha = 0.6) +
   facet_wrap(~ Quarter, labeller = label_both) +
-  scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe"))
+  scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe")) +
   labs(
     title = "Density of Shot Distance by Quarter and Outcome",
     x = "Shot Outcome",
@@ -360,7 +356,7 @@ To investigate the relationship between the time left on the clock in a quarter 
 ```{r}
 ggplot(NBA_data_clean, aes(x = SecLeft, y = ShotDist, color = ShotOutcome)) +
   geom_point(alpha = 0.6) +
-  scale_color_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe"))
+  scale_color_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe")) +
   labs(
     title = "Shot Distance vs. Seconds Left in Quarter",
     x = "Seconds Remaining in Quarter",

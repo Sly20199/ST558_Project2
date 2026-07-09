@@ -48,3 +48,6 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 NBA_PBP_2019-20.csv
+
+/.quarto/
+**/*.quarto_ipynb

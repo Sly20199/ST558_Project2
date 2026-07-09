@@ -122,7 +122,6 @@ ui <- fluidPage(
                                                      "FoulType", 
                                                      "Quarter", 
                                                      "TurnoverType",
-                                                     "ShotTypeGroup",
                                                      "ViolationType",
                                                      "WinningTeam",
                                                      "ReboundType")),
@@ -156,7 +155,7 @@ ui <- fluidPage(
                               ),
                               column(6,
                                      selectInput("num_stat_group", "Group by Categorical Variable:",
-                                                 choices = c("ShotOutcome", "GameType", "Quarter", "FoulType"),
+                                                 choices = c("ShotOutcome", "GameType", "ShotType", "Quarter", "FoulType"),
                                                  selected = "ShotOutcome")
                               )
                             ),
@@ -202,7 +201,7 @@ server <- function(input, output, session) {
   
   rv <- reactiveValues(filtered = NBA_data)
   
-  # Select All for categorical checkboxes
+  # Select All for categorical checkbox
   observeEvent(input$game_type_all, {
     if (isTRUE(input$game_type_all)) updateCheckboxGroupInput(session, "game_type",selected = c("playoff","regular"))
     else updateCheckboxGroupInput(session, "game_type", selected = character(0))
@@ -214,7 +213,11 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
   
   observeEvent(input$shot_group_all, {
-    if (isTRUE(input$shot_group_all)) updateCheckboxGroupInput(session, "shot_group",selected = c("3-Pointers","Inside Shots","Mid-Range"))
+    if (isTRUE(input$shot_group_all)) updateCheckboxGroupInput(session, "shot_group",selected = c("2-pt jump shot",
+                                                                                                   "2-pt layup",
+                                                                                                   "3-pt jump shot",
+                                                                                                   "2-pt hook shot",
+                                                                                                   "2-pt dunk"))
     else updateCheckboxGroupInput(session, "shot_group", selected = character(0))
   }, ignoreInit = TRUE)
   
@@ -252,7 +255,7 @@ server <- function(input, output, session) {
       
       if (length(input$game_type) > 0) df <- df %>% filter(GameType %in% input$game_type) 
       if (length(input$shot_outcome) > 0) df <- df %>% filter(ShotOutcome %in% input$shot_outcome) 
-      if (length(input$shot_group) > 0) df <- df %>% filter(ShotTypeGroup %in% input$shot_group)
+      if (length(input$shot_group) > 0) df <- df %>% filter(ShotType %in% input$shot_group)
       if (length(input$quarter) > 0) df <- df %>% filter(Quarter %in% input$quarter) 
       if (length(input$foul_type) > 0) df <- df %>% filter(FoulType %in% input$foul_type) 
     
