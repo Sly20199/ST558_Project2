@@ -8,7 +8,7 @@ library(DT)
 library(plotly)
 
 # Read the CSV file into an R object
-NBA_data <- read_csv("~/ST558_Project2/NBA_PBP_2019-20.csv")
+NBA_data <- read_csv("NBA_PBP_2019-20.csv")
 
 # Save the object as an RData file
 # save(NBA_data, file = "NBA_PBP_2019-20.RData")
