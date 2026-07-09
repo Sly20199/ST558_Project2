@@ -122,6 +122,7 @@ ui <- fluidPage(
                                                      "FoulType", 
                                                      "Quarter", 
                                                      "TurnoverType",
+                                                     "ShotTypeGroup",
                                                      "ViolationType",
                                                      "WinningTeam",
                                                      "ReboundType")),
@@ -155,7 +156,7 @@ ui <- fluidPage(
                               ),
                               column(6,
                                      selectInput("num_stat_group", "Group by Categorical Variable:",
-                                                 choices = c("ShotOutcome", "GameType", "Quarter", "ShotTypeGroup", "FoulType"),
+                                                 choices = c("ShotOutcome", "GameType", "Quarter", "FoulType"),
                                                  selected = "ShotOutcome")
                               )
                             ),
