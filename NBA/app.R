@@ -1,11 +1,12 @@
 library(shiny)
+library(rsconnect)
 library(bslib)
 library(tidyverse)
 library(ggplot2)
 library(ggstatsplot)
-
 library(DT)
 library(plotly)
+library(shinycssloaders)
 
 # Read the CSV file into an R object
 NBA_data <- read_csv("NBA_PBP_2019-20.csv")
@@ -26,33 +27,36 @@ ui <- fluidPage(
       sidebarPanel(
         h4("1. Categorical Filters"),
         p("Select levels to subset the data:"),
-        checkboxGroupInput("game_type_all", "Game Type:",
+        checkboxGroupInput("game_type", "Game Type:",
                          choices = c("playoff", "regular"),
                          selected = character(0)),
-        br(),
-        checkboxGroupInput("game_type", "Select All Game Types"),
-        br(),
+        checkboxInput("game_type_all", "Select All Game Types"),
+
         checkboxGroupInput("shot_outcome", "Shot Outcome:",
                          choices = c("miss", "make"),
                          selected = character(0)),
-        checkboxGroupInput("shot_outcome", "Select All Shot Outcomes"),
-        br(),
-        checkboxGroupInput("shot_type_group", "Shot Type Group:",
-                         choices = c("3-Pointers", "Inside Shots", "Mid-Range"),
+        checkboxInput("shot_outcome_all", "Select All Shot Outcomes"),
+
+        checkboxGroupInput("shot_type", "Shot Type:",
+                         choices = c("2-pt jump shot",
+                                      "2-pt layup",
+                                      "3-pt jump shot",
+                                      "2-pt hook shot",
+                                      "2-pt dunk"),
                          selected = character(0)),
-        checkboxGroupInput("shot_type_group_all", "Select All Shot Type Groups"),
-        br(),
+        checkboxInput("shot_type_all", "Select All Shot Types"),
+        
         checkboxGroupInput("quarter", "Quarter:",
                          choices = c("1","2","3","4","5","6"),
                          selected = character(0)),
-        checkboxGroupInput("quarter_all", "Select All Quarters"),
-        br(),
+        checkboxInput("quarter_all", "Select All Quarters"),
+
         checkboxGroupInput("foul_type", "Foul Types:",
                            choices = c("shooting","offensive","personal","loose ball",
                                        "techinical","away from play","personal take",
                                        "flagrant","clear path"),
                            selected = character(0)),
-        checkboxGroupInput("foul_type_all", "Select All Foul Types"),
+        checkboxInput("foul_type_all", "Select All Foul Types"),
         hr(),
         
         h4("2. Numerical Filters"),
@@ -164,7 +168,7 @@ ui <- fluidPage(
                             br(),
                    ),
                    
-                   tabPanel("Interactive Visualizations",
+                   tabPanel("3. Interactive Visualizations",
                             br(),
                             fluidRow(
                               column(4,
@@ -179,8 +183,12 @@ ui <- fluidPage(
                                                   ))
                                      
                               ),
-                              column(8,
-                                     plotlyOutput("assigned_plot_out")
+                              column(12,
+                                     shinycssloaders::withSpinner(
+                                       plotlyOutput("assigned_plot_out", height = "580px") ,
+                                       type = 6, 
+                                       color = "#1e3d59"
+                                     )
                               )
                               
                             )
@@ -212,8 +220,8 @@ server <- function(input, output, session) {
     else updateCheckboxGroupInput(session, "shot_outcome", selected = character(0))
   }, ignoreInit = TRUE)
   
-  observeEvent(input$shot_group_all, {
-    if (isTRUE(input$shot_group_all)) updateCheckboxGroupInput(session, "shot_group",selected = c("2-pt jump shot",
+  observeEvent(input$shot_type_all, {
+    if (isTRUE(input$shot_type_all)) updateCheckboxGroupInput(session, "shot_type",selected = c("2-pt jump shot",
                                                                                                    "2-pt layup",
                                                                                                    "3-pt jump shot",
                                                                                                    "2-pt hook shot",
@@ -223,12 +231,22 @@ server <- function(input, output, session) {
   
   observeEvent(input$quarter_all, {
     
-    if (isTRUE(input$quarter_all)) updateCheckboxGroupInput(session, "quarter",selected = c("1","2","3","4","5","6"))
+    if (isTRUE(input$quarter_all)) updateCheckboxGroupInput(session, "quarter",
+                                                            selected = c("1","2","3","4","5","6"))
     else updateCheckboxGroupInput(session, "quarter", selected = character(0))
   }, ignoreInit = TRUE)
 
   observeEvent(input$foul_type_all, {
-   if (isTRUE(input$foul_type_all)) updateCheckboxGroupInput(session, "foul_type",selected = c("shooting","offensive","personal","loose ball","techinical","away from play","personal take","flagrant","clear path"))
+   if (isTRUE(input$foul_type_all)) updateCheckboxGroupInput(session, "foul_type",
+                                                             selected = c("shooting",
+                                                                          "offensive",
+                                                                          "personal",
+                                                                          "loose ball",
+                                                                          "techinical",
+                                                                          "away from play",
+                                                                          "personal take",
+                                                                          "flagrant",
+                                                                          "clear path"))
   else updateCheckboxGroupInput(session, "foul_type", selected = character(0))
   }, ignoreInit = TRUE)
   
@@ -255,7 +273,7 @@ server <- function(input, output, session) {
       
       if (length(input$game_type) > 0) df <- df %>% filter(GameType %in% input$game_type) 
       if (length(input$shot_outcome) > 0) df <- df %>% filter(ShotOutcome %in% input$shot_outcome) 
-      if (length(input$shot_group) > 0) df <- df %>% filter(ShotType %in% input$shot_group)
+      if (length(input$shot_type) > 0) df <- df %>% filter(ShotType %in% input$shot_type)
       if (length(input$quarter) > 0) df <- df %>% filter(Quarter %in% input$quarter) 
       if (length(input$foul_type) > 0) df <- df %>% filter(FoulType %in% input$foul_type) 
     
@@ -282,19 +300,21 @@ server <- function(input, output, session) {
   )
   
   output$one_way_out <- renderTable({
-    df <- rv$filtered ; validate(need(nrow(df) > 0, "No records."))
+    df <- rv$filtered ; validate(need(nrow(df) > 0, "Error: Please select categories in the sidebar and click 'Apply Filters' to display data."))
     v <- input$cat_oneway_var
     as.data.frame(table(df[[v]])) %>% rename(Category_Level = Var1, Frequency_Count = Freq)
   })
   
   output$two_way_out <- renderTable({
-    df <- rv$filtered ; validate(need(nrow(df) > 0,"No records."))
-    v1 <- input$cat_twoway_row; v2 <- input$cat_twoway_col
+    df <- rv$filtered ; validate(need(nrow(df) > 0,"Error: Please select categories in the sidebar and click 'Apply Filters' to display data."))
+    v1 <- input$cat_twoway_row;
+    v2 <- input$cat_twoway_col
+    validate(need(v1 != v2, "Error: Row Variable and Column Variable must be different! Please select two distinct categorical variables."))
     as.data.frame.matrix(table(df[[v1]],df[[v2]])) %>% rownames_to_column("Row / Col")
   })
   
   output$num_summary_table <- renderTable({
-    df <- rv$filtered ; validate(need(nrow(df) > 0, "No records."))
+    df <- rv$filtered ; validate(need(nrow(df) > 0, "Error: Please select categories in the sidebar and click 'Apply Filters' to display data."))
     n_var <- input$num_stat_var; g_var <- input$num_stat_group
     df %>%
       filter(!is.na(.data[[n_var]]), !is.na(.data[[g_var]])) %>%
@@ -311,9 +331,10 @@ server <- function(input, output, session) {
   })
   
   output$assigned_plot_out <- renderPlotly({
-    df <- rv$filtered ; validate(need(nrow(df) > 0, "No data."))
+    df <- rv$filtered 
+    validate(need(nrow(df) > 0, "Error: Cannot generate plot: No data matches the sidebar filters. Please select valid categories and click 'Apply Filters' to display data."))
     NBA_data_clean <- df %>% filter(!is.na(ShotOutcome), !is.na(ShotDist), !is.na(GameType))
-    validate(need(!is.null(NBA_data_clean) && nrow(NBA_data_clean) > 0, "All entries are NA in subset."))
+    validate(need(!is.null(NBA_data_clean) && nrow(NBA_data_clean) > 0, "Error: All entries are NA for the reuqired plot variables in this subset."))
     
     req(input$assigned_plot_choice)
     choice <- input$assigned_plot_choice
@@ -323,14 +344,14 @@ server <- function(input, output, session) {
         labs(
           title = "Counts of Shot Types",
           subtitle = "2019-20 NBA Play-by-Play Data",
-          x = "Shot Outcome",
+          x = "Shot Types",
           y = "Count"
         ) + 
         theme_minimal(base_size = 14) +
         theme(legend.position = "none")
       ggplotly(g)
     } else if (choice == "plot2") {
-      g <- ggplot(NBA_data_clean, aes(x = ShotDist)) +
+      g <- ggplot(NBA_data_clean, aes(x = ShotDist)) + 
         geom_density(fill = "#1e3d59", alpha = 0.8 ) +
         labs(title = "Density of Shot Distance",
              x = "Shot Outcome", 
@@ -350,35 +371,39 @@ server <- function(input, output, session) {
     } else if (choice == "plot4") {
       g <- ggplot(NBA_data_clean , aes(x = ShotOutcome, y = ShotDist, fill = ShotOutcome)) +
           geom_boxplot()+
-          scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe"))
+          scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe")) +
           labs(
           title = "Shot Distance by Shot Outcome",
             x = "Shot Outcome",
             y = "Shot Distance"
           )
-      ggplotly(g)
+      suppressWarnings(ggplotly(g))
     } else if (choice == "plot5") {
       g<-  ggplot(NBA_data_clean, aes(x = ShotDist, fill = ShotOutcome)) +
           geom_histogram(bins = 20, position = "identity", alpha = 0.6) +
           facet_wrap(~ Quarter, labeller = label_both) +
-          scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe"))
+          scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe")) +
          labs(
             title = "Density of Shot Distance by Quarter and Outcome",
-            x = "Shot Outcome",
+            x = "Shot Distance(feet)",
             y = "Density",
             fill = "Shot Outcome"
           )
       ggplotly(g)
     } else if (choice == "plot6") {
-      g <- ggplot(NBA_data_clean, aes(x = SecLeft, y = ShotDist, color = ShotOutcome)) +
+      plot_data <- NBA_data_clean
+      if (nrow(plot_data) > 1500) {
+        set.seed(123)
+        plot_data <- plot_data[sample(1:nrow(plot_data), 1500), ]
+      }
+      g <- ggplot(plot_data, aes(x = SecLeft, y = ShotDist, color = ShotOutcome)) +
             geom_point(alpha = 0.6) +
-            scale_color_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe"))
+            scale_color_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe")) +
             labs(
               title = "Shot Distance vs. Seconds Left in Quarter",
                 x = "Seconds Remaining in Quarter",
                 y = "Shot Distance(feet)",
-                color = "Shot Outcome"
-              ) 
+                color = "Shot Outcome") 
       ggplotly(g)
     } else if (choice == "plot7") {
       top3_shot_types <- NBA_data_clean %>% 
@@ -388,19 +413,26 @@ server <- function(input, output, session) {
       
       NBA_top3 <- NBA_data_clean %>% 
         filter(ShotType %in% top3_shot_types)
+        
+      validate(need(nrow(NBA_top3) > 5, "Error: Insufficient sample size to compute non-parametric HDR comparisons."))
+      
+      if (nrow(NBA_top3) > 300){
+        set.seed(123)
+        NBA_top3 <- NBA_top3[sample(1:nrow(NBA_top3), 300), ]
+      }
       
       g <- ggbetweenstats(
             data  = NBA_top3,
             x     = ShotType, 
             y     = ShotDist,
             title = "Shot Distance by Shot Type(Top3)",
-            xlab  = "Shot Type",
+            xlab  = "Shot Types",
             ylab  = "Shot Distance(feet)",
             type  = "nonparametric",
             pairwise.comparisons = TRUE, 
             p.adjust.method = "BH"
           )
-      ggplotly(g)
+      suppressWarnings(ggplotly(g))
     }
   })
 }

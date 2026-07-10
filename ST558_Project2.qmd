@@ -34,7 +34,7 @@ library(ggstatsplot)
 Next, we imported the NBA play-by-play dataset into R for using read_csv() from the readr package.
 
 ```{r}
-NBA_data <- read_csv("~/ST558_Project2/NBA_PBP_2019-20.csv")
+NBA_data <- read_csv("~/ST558_Project2/NBA/NBA_PBP_2019-20.csv")
 ```
 
 ## Previewing Data
@@ -280,7 +280,7 @@ ggplot(NBA_data_clean, aes(x = ShotType)) +
   labs(
     title = "Counts of Shot Types",
     subtitle = "2019-20 NBA Play-by-Play Data",
-    x = "Shot Outcome",
+    x = "Shot Types",
     y = "Count"
   ) + 
   theme_minimal() +
@@ -296,7 +296,7 @@ ggplot(NBA_data_clean, aes(x = ShotDist)) +
   geom_density(fill = "#1e3d59", alpha = 0.8 ) +
   labs(
     title = "Density of Shot Distance",
-    x = "Shot Outcome",
+    x = "Shot Distance(feet)",
     y = "Density"
   ) + theme_minimal()
 ```
@@ -328,7 +328,7 @@ ggplot(NBA_data_clean , aes(x = ShotOutcome, y = ShotDist, fill = ShotOutcome)) 
   labs(
     title = "Shot Distance by Shot Outcome",
     x = "Shot Outcome",
-    y = "Shot Distance"
+    y = "Shot Distance(feet)"
   )
 ```
 
@@ -343,7 +343,7 @@ ggplot(NBA_data_clean, aes(x = ShotDist, fill = ShotOutcome)) +
   scale_fill_manual(values = c("miss" = "#e85a4f", "make" = "#45b6fe")) +
   labs(
     title = "Density of Shot Distance by Quarter and Outcome",
-    x = "Shot Outcome",
+    x = "Shot Distance(feet)",
     y = "Density",
     fill = "Shot Outcome"
   )
@@ -377,6 +377,11 @@ top3_shot_types <- NBA_data_clean %>%
 
 NBA_top3 <- NBA_data_clean %>% 
   filter(ShotType %in% top3_shot_types)
+
+if (nrow(NBA_top3) > 300){
+  set.seed(123)
+  NBA_top3 <- NBA_top3[sample(1:nrow(NBA_top3), 300), ]
+}
 
 ggbetweenstats(
   data  = NBA_top3,

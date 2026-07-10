@@ -11,7 +11,7 @@
     "href": "ST558_Project2.html#read-nba-shooting-data-from-a-csv-file",
     "title": "ST558 project 2",
     "section": "Read NBA shooting data from a CSV file",
-    "text": "Read NBA shooting data from a CSV file\nNext, we imported the NBA play-by-play dataset into R for using read_csv() from the readr package.\n\nNBA_data &lt;- read_csv(\"~/ST558_Project2/NBA_PBP_2019-20.csv\")\n\nNew names:\nRows: 539265 Columns: 41\n── Column specification\n──────────────────────────────────────────────────────── Delimiter: \",\" chr\n(34): URL, GameType, Location, Date, WinningTeam, AwayTeam, AwayPlay, H... dbl\n(5): Quarter, SecLeft, AwayScore, HomeScore, ShotDist lgl (1): ...41 time (1):\nTime\nℹ Use `spec()` to retrieve the full column specification for this data. ℹ\nSpecify the column types or set `show_col_types = FALSE` to quiet this message.\n• `` -&gt; `...41`"
+    "text": "Read NBA shooting data from a CSV file\nNext, we imported the NBA play-by-play dataset into R for using read_csv() from the readr package.\n\nNBA_data &lt;- read_csv(\"~/ST558_Project2/NBA/NBA_PBP_2019-20.csv\")\n\nNew names:\nRows: 539265 Columns: 41\n── Column specification\n──────────────────────────────────────────────────────── Delimiter: \",\" chr\n(34): URL, GameType, Location, Date, WinningTeam, AwayTeam, AwayPlay, H... dbl\n(5): Quarter, SecLeft, AwayScore, HomeScore, ShotDist lgl (1): ...41 time (1):\nTime\nℹ Use `spec()` to retrieve the full column specification for this data. ℹ\nSpecify the column types or set `show_col_types = FALSE` to quiet this message.\n• `` -&gt; `...41`"
   },
   {
     "objectID": "ST558_Project2.html#previewing-data",
@@ -74,14 +74,14 @@
     "href": "ST558_Project2.html#plot-1-bar-chartshot-types",
     "title": "ST558 project 2",
     "section": "Plot 1: Bar chart(Shot Types)",
-    "text": "Plot 1: Bar chart(Shot Types)\nTo examine the frequency and popularity of different shot selections, we construct a bar chart of Shot Types. The height of each bar represents the absolute count of shots attempted for each category.\n\nggplot(NBA_data_clean, aes(x = ShotType)) + \n  geom_bar() +\n  labs(\n    title = \"Counts of Shot Types\",\n    subtitle = \"2019-20 NBA Play-by-Play Data\",\n    x = \"Shot Outcome\",\n    y = \"Count\"\n  ) + \n  theme_minimal() +\n  theme(legend.position = \"none\")"
+    "text": "Plot 1: Bar chart(Shot Types)\nTo examine the frequency and popularity of different shot selections, we construct a bar chart of Shot Types. The height of each bar represents the absolute count of shots attempted for each category.\n\nggplot(NBA_data_clean, aes(x = ShotType)) + \n  geom_bar() +\n  labs(\n    title = \"Counts of Shot Types\",\n    subtitle = \"2019-20 NBA Play-by-Play Data\",\n    x = \"Shot Types\",\n    y = \"Count\"\n  ) + \n  theme_minimal() +\n  theme(legend.position = \"none\")"
   },
   {
     "objectID": "ST558_Project2.html#plot-2-density-plot-shot-distance",
     "href": "ST558_Project2.html#plot-2-density-plot-shot-distance",
     "title": "ST558 project 2",
     "section": "Plot 2: Density Plot (Shot Distance)",
-    "text": "Plot 2: Density Plot (Shot Distance)\nTo visualize the continuous probability distribution of shot distances, we construct a kernel density plot using geom_density(). We fill the area under the curve with a custom color and apply a semitransparent opacity to achieve a modern look. The plot shows where players are most active on the court.\n\nggplot(NBA_data_clean, aes(x = ShotDist)) +\n  geom_density(fill = \"#1e3d59\", alpha = 0.8 ) +\n  labs(\n    title = \"Density of Shot Distance\",\n    x = \"Shot Outcome\",\n    y = \"Density\"\n  ) + theme_minimal()"
+    "text": "Plot 2: Density Plot (Shot Distance)\nTo visualize the continuous probability distribution of shot distances, we construct a kernel density plot using geom_density(). We fill the area under the curve with a custom color and apply a semitransparent opacity to achieve a modern look. The plot shows where players are most active on the court.\n\nggplot(NBA_data_clean, aes(x = ShotDist)) +\n  geom_density(fill = \"#1e3d59\", alpha = 0.8 ) +\n  labs(\n    title = \"Density of Shot Distance\",\n    x = \"Shot Distance(feet)\",\n    y = \"Density\"\n  ) + theme_minimal()"
   },
   {
     "objectID": "ST558_Project2.html#plot-3-side-by-side-bar-chart-multivariate---shot-outcomes-by-game-type",
@@ -95,14 +95,14 @@
     "href": "ST558_Project2.html#plot-4-box-plot-multivariate---shot-distance-by-shot-outcomes",
     "title": "ST558 project 2",
     "section": "Plot 4: Box Plot (Multivariate - Shot Distance by Shot Outcomes)",
-    "text": "Plot 4: Box Plot (Multivariate - Shot Distance by Shot Outcomes)\nTo analyze the spread and key statistics of shot distances grouped by shot success, we construct side-by-side box plots. This visualization helps us assess the relationship between how far a shot is taken and whether it is successfully made.\n\nggplot(NBA_data_clean , aes(x = ShotOutcome, y = ShotDist, fill = ShotOutcome)) +\n  geom_boxplot()+\n  scale_fill_manual(values = c(\"miss\" = \"#e85a4f\", \"make\" = \"#45b6fe\")) +\n  labs(\n    title = \"Shot Distance by Shot Outcome\",\n    x = \"Shot Outcome\",\n    y = \"Shot Distance\"\n  )"
+    "text": "Plot 4: Box Plot (Multivariate - Shot Distance by Shot Outcomes)\nTo analyze the spread and key statistics of shot distances grouped by shot success, we construct side-by-side box plots. This visualization helps us assess the relationship between how far a shot is taken and whether it is successfully made.\n\nggplot(NBA_data_clean , aes(x = ShotOutcome, y = ShotDist, fill = ShotOutcome)) +\n  geom_boxplot()+\n  scale_fill_manual(values = c(\"miss\" = \"#e85a4f\", \"make\" = \"#45b6fe\")) +\n  labs(\n    title = \"Shot Distance by Shot Outcome\",\n    x = \"Shot Outcome\",\n    y = \"Shot Distance(feet)\"\n  )"
   },
   {
     "objectID": "ST558_Project2.html#plot-5-faceted-histogram-multivariate-faceted---shot-distance-by-quarter",
     "href": "ST558_Project2.html#plot-5-faceted-histogram-multivariate-faceted---shot-distance-by-quarter",
     "title": "ST558 project 2",
     "section": "Plot 5: Faceted Histogram (Multivariate & Faceted - Shot Distance by Quarter)",
-    "text": "Plot 5: Faceted Histogram (Multivariate & Faceted - Shot Distance by Quarter)\nTo analyze how shot distance and success rates evolve as the game progresses, we construct a faceted histogram.\n\nggplot(NBA_data_clean, aes(x = ShotDist, fill = ShotOutcome)) +\n  geom_histogram(bins = 20, position = \"identity\", alpha = 0.6) +\n  facet_wrap(~ Quarter, labeller = label_both) +\n  scale_fill_manual(values = c(\"miss\" = \"#e85a4f\", \"make\" = \"#45b6fe\")) +\n  labs(\n    title = \"Density of Shot Distance by Quarter and Outcome\",\n    x = \"Shot Outcome\",\n    y = \"Density\",\n    fill = \"Shot Outcome\"\n  )"
+    "text": "Plot 5: Faceted Histogram (Multivariate & Faceted - Shot Distance by Quarter)\nTo analyze how shot distance and success rates evolve as the game progresses, we construct a faceted histogram.\n\nggplot(NBA_data_clean, aes(x = ShotDist, fill = ShotOutcome)) +\n  geom_histogram(bins = 20, position = \"identity\", alpha = 0.6) +\n  facet_wrap(~ Quarter, labeller = label_both) +\n  scale_fill_manual(values = c(\"miss\" = \"#e85a4f\", \"make\" = \"#45b6fe\")) +\n  labs(\n    title = \"Density of Shot Distance by Quarter and Outcome\",\n    x = \"Shot Distance(feet)\",\n    y = \"Density\",\n    fill = \"Shot Outcome\"\n  )"
   },
   {
     "objectID": "ST558_Project2.html#plot-6-scatter-plot-multivariate---shot-distance-vs.-seconds-left",
@@ -116,6 +116,6 @@
     "href": "ST558_Project2.html#plot-7-bivariate-highest-density-region-hdr-plot",
     "title": "ST558 project 2",
     "section": "Plot 7: Bivariate Highest Density Region (HDR) Plot",
-    "text": "Plot 7: Bivariate Highest Density Region (HDR) Plot\nTo investigate whether shot distances differ significantly among the top three most frequent shot types, we construct a categorical statistical comparison plot using ggbetweenstats().\n\ntop3_shot_types &lt;- NBA_data_clean %&gt;% \n  dplyr::count(ShotType, sort = TRUE) %&gt;%\n  slice_head(n = 3) %&gt;%\n  pull(ShotType)\n\nNBA_top3 &lt;- NBA_data_clean %&gt;% \n  filter(ShotType %in% top3_shot_types)\n\nggbetweenstats(\n  data  = NBA_top3,\n  x     = ShotType, \n  y     = ShotDist,\n  title = \"Shot Distance by Shot Type(Top3)\",\n  xlab  = \"Shot Type\",\n  ylab  = \"Shot Distance(feet)\",\n  type  = \"nonparametric\",\n  pairwise.comparisons = TRUE, \n  p.adjust.method = \"BH\"\n)"
+    "text": "Plot 7: Bivariate Highest Density Region (HDR) Plot\nTo investigate whether shot distances differ significantly among the top three most frequent shot types, we construct a categorical statistical comparison plot using ggbetweenstats().\n\ntop3_shot_types &lt;- NBA_data_clean %&gt;% \n  dplyr::count(ShotType, sort = TRUE) %&gt;%\n  slice_head(n = 3) %&gt;%\n  pull(ShotType)\n\nNBA_top3 &lt;- NBA_data_clean %&gt;% \n  filter(ShotType %in% top3_shot_types)\n\nif (nrow(NBA_top3) &gt; 300){\n  set.seed(123)\n  NBA_top3 &lt;- NBA_top3[sample(1:nrow(NBA_top3), 300), ]\n}\n\nggbetweenstats(\n  data  = NBA_top3,\n  x     = ShotType, \n  y     = ShotDist,\n  title = \"Shot Distance by Shot Type(Top3)\",\n  xlab  = \"Shot Type\",\n  ylab  = \"Shot Distance(feet)\",\n  type  = \"nonparametric\",\n  pairwise.comparisons = TRUE, \n  p.adjust.method = \"BH\"\n)"
   }
 ]
