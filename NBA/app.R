@@ -378,7 +378,7 @@ server <- function(input, output, session) {
             x = "Shot Outcome",
             y = "Shot Distance"
           )
-      suppressWarnings(ggplotly(g))
+      ggplotly(g)
     } else if (choice == "plot5") {
       g<-  ggplot(NBA_data_clean, aes(x = ShotDist, fill = ShotOutcome)) +
           geom_histogram(bins = 20, position = "identity", alpha = 0.6) +
@@ -434,7 +434,7 @@ server <- function(input, output, session) {
             pairwise.comparisons = TRUE, 
             p.adjust.method = "BH"
           )
-      suppressWarnings(ggplotly(g))
+      ggplotly(g)
     }
   })
 }
