@@ -53,7 +53,7 @@ ui <- fluidPage(
 
         checkboxGroupInput("foul_type", "Foul Types:",
                            choices = c("shooting","offensive","personal","loose ball",
-                                       "techinical","away from play","personal take",
+                                       "technical","away from play","personal take",
                                        "flagrant","clear path"),
                            selected = character(0)),
         checkboxInput("foul_type_all", "Select All Foul Types"),
@@ -67,7 +67,7 @@ ui <- fluidPage(
         uiOutput("slider1_ui"),
         selectInput("num_var2", "Numeric Variable 2:",
                     choices = c("None", "ShotDist", "SecLeft", "AwayScore", "HomeScore"),
-                    selected = "ShotDist"),
+                    selected = "SecLeft"),
         uiOutput("slider2_ui"),
         hr(),
         actionButton("apply", "Apply Filters")
@@ -83,7 +83,7 @@ ui <- fluidPage(
               p("This Shiny application help users to explore, filter, analyze, and visualize NBA play-by-play shooting dataset from the  2019-20 regular seasons and playoffs.
                 Use the sidebar to filter the dataset, and click the 'Apply Filters' button to run the subset."),
               
-              h4("Data & Souce Information"),
+              h4("Data & Source Information"),
               p("The data captures event-level play-by-play shooting records, including games type, shot distances, outcomes, quarter progression, and foul types. 
                For more detail documentation on NBA statistics and play-by-play tracking methodology, please visit the",
                tags$a(href = "https://www.kaggle.com/datasets/schmadam97/nba-playbyplay-data-20182019?select=NBA_PBP_2019-20.csv",
@@ -134,12 +134,12 @@ ui <- fluidPage(
                              hr(),
                              h4("2. Two-Way Contingency Tables (Cross Counts)"),
                              fluidRow(
-                               column(4, selectInput("cat_twoway_row","Row Variable:", 
+                               column(12, selectInput("cat_twoway_row","Row Variable:", 
                                                      choices = c("GameType","ShotType", "Quarter"),
                                                      selected = "GameType"
                                )
                                ),
-                               column(4, selectInput("cat_twoway_col","Column Variable:",
+                               column(12, selectInput("cat_twoway_col","Column Variable:",
                                                      choices = c("ShotOutcome", "FoulType", "TurnoverType", "Quarter"),
                                                      selected = "ShotOutcome"
                                )
@@ -150,7 +150,7 @@ ui <- fluidPage(
                    
                    tabPanel("2. Numerical Summaries ",
                             br(),
-                            h4("Summary Statistics across Categorical Groups (n, mean, median, min, max)"),
+                            h4("Summary Statistics across Categorical Groups"),
                             fluidRow(
                               column(6,
                                      selectInput("num_stat_var", "Numeric Variable:", 
@@ -226,7 +226,7 @@ server <- function(input, output, session) {
                                                                                                    "3-pt jump shot",
                                                                                                    "2-pt hook shot",
                                                                                                    "2-pt dunk"))
-    else updateCheckboxGroupInput(session, "shot_group", selected = character(0))
+    else updateCheckboxGroupInput(session, "shot_type", selected = character(0))
   }, ignoreInit = TRUE)
   
   observeEvent(input$quarter_all, {
@@ -277,11 +277,11 @@ server <- function(input, output, session) {
       if (length(input$quarter) > 0) df <- df %>% filter(Quarter %in% input$quarter) 
       if (length(input$foul_type) > 0) df <- df %>% filter(FoulType %in% input$foul_type) 
     
-      if (!is.null(input$num_var1) && input$num_var1 != "None" && is.null(input$slider1)){
+      if (!is.null(input$num_var1) && input$num_var1 != "None" && !is.null(input$slider1)){
         v1 <- input$num_var1; df <- df %>% filter(.data[[v1]] >= input$slider1[1] & .data[[v1]] <= input$slider1[2])
       }
     
-      if (!is.null(input$num_var2) && input$num_var2 != "None" && is.null(input$slider2)){
+      if (!is.null(input$num_var2) && input$num_var2 != "None" && !is.null(input$slider2)){
       v2 <- input$num_var2; df <- df %>% filter(.data[[v2]] >= input$slider1[1] & .data[[v2]] <= input$slider2[2])
       }
     
@@ -302,6 +302,7 @@ server <- function(input, output, session) {
   output$one_way_out <- renderTable({
     df <- rv$filtered ; validate(need(nrow(df) > 0, "Error: Please select categories in the sidebar and click 'Apply Filters' to display data."))
     v <- input$cat_oneway_var
+    validate(need(v %in% names(df), "Select variables is not present in dataset."))
     as.data.frame(table(df[[v]])) %>% rename(Category_Level = Var1, Frequency_Count = Freq)
   })
   
@@ -334,7 +335,7 @@ server <- function(input, output, session) {
     df <- rv$filtered 
     validate(need(nrow(df) > 0, "Error: Cannot generate plot: No data matches the sidebar filters. Please select valid categories and click 'Apply Filters' to display data."))
     NBA_data_clean <- df %>% filter(!is.na(ShotOutcome), !is.na(ShotDist), !is.na(GameType))
-    validate(need(!is.null(NBA_data_clean) && nrow(NBA_data_clean) > 0, "Error: All entries are NA for the reuqired plot variables in this subset."))
+    validate(need(!is.null(NBA_data_clean) && nrow(NBA_data_clean) > 0, "Error: All entries are NA for the required plot variables in this subset."))
     
     req(input$assigned_plot_choice)
     choice <- input$assigned_plot_choice
@@ -354,7 +355,7 @@ server <- function(input, output, session) {
       g <- ggplot(NBA_data_clean, aes(x = ShotDist)) + 
         geom_density(fill = "#1e3d59", alpha = 0.8 ) +
         labs(title = "Density of Shot Distance",
-             x = "Shot Outcome", 
+             x = "Shot Distance(feet)", 
              y = "Density") + theme_minimal()
       ggplotly(g)
     } else if (choice == "plot3") {
@@ -412,7 +413,8 @@ server <- function(input, output, session) {
         pull(ShotType)
       
       NBA_top3 <- NBA_data_clean %>% 
-        filter(ShotType %in% top3_shot_types)
+        filter(ShotType %in% top3_shot_types) %>%
+        mutate(ShotType = as.character(ShotType))
         
       validate(need(nrow(NBA_top3) > 5, "Error: Insufficient sample size to compute non-parametric HDR comparisons."))
       
